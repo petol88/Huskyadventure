@@ -1,0 +1,413 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #1a1f1a;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  touch-action: none;
+}
+
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#game {
+  display: block;
+  background: #3a5a3a;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* HUD */
+#hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 18px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.hud-item {
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px 12px;
+  border-radius: 14px;
+}
+
+/* Mykistyspainike on klikattava (muu HUD ei ota klikkejä) */
+#mute-btn {
+  pointer-events: auto;
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-family: inherit;
+}
+
+#mute-btn:active {
+  transform: scale(0.9);
+}
+
+/* Huskyn kokemusmittari */
+#xpbar {
+  position: absolute;
+  top: 54px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(60%, 360px);
+  height: 7px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#xpfill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #f0d060, #ffe888);
+  transition: width 0.2s ease-out;
+}
+
+/* Opitut taidot -rivi */
+#perks {
+  position: absolute;
+  top: 68px;
+  left: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.perk-chip {
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+/* Muinaisesine-merkki — kultainen hehku */
+.artifact-chip {
+  background: rgba(80, 60, 20, 0.55);
+  border: 1px solid #ffd24a;
+  box-shadow: 0 0 8px rgba(255, 210, 74, 0.6);
+}
+
+/* Sprint-painike (kosketus) */
+#sprint-btn {
+  position: absolute;
+  bottom: 60px;
+  right: 40px;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: rgba(240, 208, 96, 0.25);
+  border: 2px solid rgba(240, 208, 96, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  touch-action: none;
+}
+
+#sprint-btn.active {
+  background: rgba(240, 208, 96, 0.55);
+  transform: scale(0.92);
+}
+
+/* Ulvonta-painike (kosketus) */
+#howl-btn {
+  position: absolute;
+  bottom: 130px;
+  right: 60px;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(180, 150, 240, 0.25);
+  border: 2px solid rgba(180, 150, 240, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  touch-action: none;
+}
+
+#howl-btn.active {
+  background: rgba(180, 150, 240, 0.55);
+  transform: scale(0.92);
+}
+
+/* Taidonvalintanäyttö */
+#skill-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 15, 10, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 12;
+  padding: 16px;
+}
+
+#skill-overlay.hidden {
+  display: none;
+}
+
+#skill-panel {
+  text-align: center;
+  color: #fff;
+  max-width: 720px;
+  width: 100%;
+}
+
+#skill-panel h2 {
+  font-size: clamp(22px, 5vw, 34px);
+  margin-bottom: 6px;
+}
+
+#skill-panel > p {
+  opacity: 0.8;
+  margin-bottom: 18px;
+}
+
+#skill-cards {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.skill-card {
+  flex: 1 1 180px;
+  max-width: 220px;
+  background: #2a3326;
+  border: 2px solid #4a5a3e;
+  border-radius: 16px;
+  padding: 18px 14px;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.12s, border-color 0.2s, background 0.2s;
+}
+
+.skill-card:hover {
+  transform: translateY(-4px);
+  border-color: #f0d060;
+  background: #34402e;
+}
+
+.skill-card:active {
+  transform: scale(0.97);
+}
+
+.skill-emoji {
+  font-size: 44px;
+  margin-bottom: 8px;
+}
+
+.skill-name {
+  font-size: 19px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.skill-name .lvl {
+  font-size: 13px;
+  color: #f0d060;
+}
+
+.skill-desc {
+  font-size: 14px;
+  opacity: 0.85;
+  line-height: 1.35;
+}
+
+/* Tasonvaihtobanneri */
+#banner {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  color: #ffe070;
+  font-size: clamp(32px, 8vw, 64px);
+  font-weight: 900;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 8;
+}
+
+#banner.show {
+  animation: bannerPop 1.8s ease-out forwards;
+}
+
+@keyframes bannerPop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  75% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -55%) scale(1); }
+}
+
+/* Kosketusohjaus */
+#touch-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  display: none; /* näytetään vain kosketuslaitteilla */
+}
+
+#joystick {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  touch-action: none;
+}
+
+#joystick-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  margin: -30px 0 0 -30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+body.touch #touch-controls {
+  display: block;
+}
+
+/* Overlay (aloitus / game over) */
+#overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 15, 10, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  z-index: 10;
+}
+
+#overlay.hidden {
+  display: none;
+}
+
+#overlay-content {
+  padding: 20px;
+  max-width: 90%;
+}
+
+#overlay h1 {
+  font-size: clamp(28px, 7vw, 48px);
+  margin-bottom: 16px;
+}
+
+#overlay p {
+  font-size: clamp(15px, 3.5vw, 20px);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.hint {
+  opacity: 0.7;
+  font-size: clamp(12px, 3vw, 15px) !important;
+}
+
+/* Ennätyspaneeli */
+#highscores {
+  margin: 18px auto 4px;
+  max-width: 280px;
+}
+
+#highscores:empty {
+  display: none;
+}
+
+.record-badge {
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 900;
+  color: #ffe070;
+  margin-bottom: 10px;
+  animation: badgePulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes badgePulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+
+.hs-title {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+
+.hs-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 17px;
+}
+
+.hs-row b {
+  color: #ffe070;
+}
+
+#start-btn {
+  margin-top: 18px;
+  padding: 14px 36px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1a1f1a;
+  background: #f0d060;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+}
+
+#start-btn:hover {
+  background: #ffe070;
+}
+
+#start-btn:active {
+  transform: scale(0.95);
+}
