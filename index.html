@@ -17,7 +17,9 @@
       <div class="hud-item">🦴 Lv <span id="huskyLevel">1</span></div>
       <div class="hud-item">💎 <span id="gems">0</span></div>
       <div class="hud-item">❤️ <span id="lives">3</span></div>
+      <div class="hud-item" id="temp-hud" style="display: none;">🌡️ <span id="temp-value">Okei</span></div>
       <button id="mute-btn" class="hud-item" type="button" title="Äänet päälle/pois">🔊</button>
+      <button id="quit-btn" class="hud-item" type="button" title="Lopeta peli">Lopeta ❌</button>
     </div>
 
     <!-- Huskyn kokemusmittari -->
@@ -47,6 +49,36 @@
       </div>
     </div>
 
+    <!-- Kauppanäyttö -->
+    <div id="shop-overlay" class="hidden">
+      <div id="shop-panel">
+        <h2>💎 Huskyn Jalokivikauppa</h2>
+        <div class="shop-gems-balance">Sinulla on: <span id="shop-gem-count">0</span> 💎</div>
+        
+        <h3>🐺 Skinit (Pysyvät ulkoasut)</h3>
+        <div id="shop-skins-list" class="shop-grid"></div>
+        
+        <h3>🎒 Tavarat (Seuraavalle pelikerralle)</h3>
+        <div id="shop-items-list" class="shop-grid"></div>
+        
+        <h3>🎩 Asusteet (Pysyvät hatut)</h3>
+        <div id="shop-hats-list" class="shop-grid"></div>
+        
+        <button id="shop-close-btn">Palaa alkuun</button>
+      </div>
+    </div>
+
+    <!-- Mökin parantelunäyttö -->
+    <div id="cabin-overlay" class="hidden">
+      <div id="cabin-panel">
+        <h2>🔨 Mökin Nikkarointipöytä</h2>
+        <div class="shop-gems-balance">Sinulla on: <span id="cabin-gem-count">0</span> 💎</div>
+        <p>Sisusta ja parantele mökkiäsi saavuttaaksesi pysyviä etuja:</p>
+        <div id="cabin-upgrades-list" class="shop-grid"></div>
+        <button id="cabin-close-btn">Sulje työpöytä</button>
+      </div>
+    </div>
+
     <!-- Aloitus-/lopetusnäyttö -->
     <div id="overlay">
       <div id="overlay-content">
@@ -54,16 +86,57 @@
         <p id="overlay-text">Pyydystä pieniä eläimiä ja väistä isompia!</p>
         <p class="hint">Tietokone: WASD/nuolet &nbsp;•&nbsp; ⚡ Vaihto = kirmaus &nbsp;•&nbsp; Välilyönti = ulvonta</p>
         <div id="highscores"></div>
-        <button id="start-btn">Aloita peli</button>
+        <div id="achievements-section">
+          <h3>🏆 Saavutukset & Palkinnot</h3>
+          <div id="achievements-list"></div>
+        </div>
+        <div class="overlay-buttons" style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+          <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 4px;">
+            <button id="start-mainland-btn" style="background: linear-gradient(135deg, #1e7a30, #3ca854); border: none; padding: 12px 20px; border-radius: 12px; font-weight: bold; color: white; cursor: pointer; transition: transform 0.1s;">Mannerseikkailu 🌲</button>
+            <button id="start-islands-btn" style="background: linear-gradient(135deg, #1e6fa8, #3c92d0); border: none; padding: 12px 20px; border-radius: 12px; font-weight: bold; color: white; cursor: pointer; transition: transform 0.1s;">Saariseikkailu ⛵</button>
+          </div>
+          <div style="display: flex; gap: 8px; justify-content: center; width: 100%;">
+            <button id="shop-btn-open">Kauppa 💎</button>
+            <button id="codex-btn-open">Bestiarium 📖</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seikkailukartta (Slay the Spire -reittivalinta) -->
+    <div id="map-overlay" class="hidden">
+      <div id="map-panel">
+        <h2>🗺️ Seikkailukartta</h2>
+        <p>Valitse seuraava reittipisteesi:</p>
+        <div id="map-container-inner" style="position: relative; width: 100%; height: 350px; background: rgba(0,0,0,0.4); border-radius: 12px; overflow: hidden; margin: 15px 0;">
+          <svg id="map-svg" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+          <div id="map-nodes-container" style="position: absolute; inset: 0; width: 100%; height: 100%;"></div>
+        </div>
+        <div class="map-legend" style="display: flex; justify-content: space-around; font-size: 14px; font-weight: bold; background: rgba(255,255,255,0.06); padding: 8px; border-radius: 8px;">
+          <span>⚔️ Taistelu</span>
+          <span>🏛️ Luolasto</span>
+          <span>⛺ Lepopaikka</span>
+          <span>👑 Pomo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bestiarium / Codex -näyttö -->
+    <div id="codex-overlay" class="hidden">
+      <div id="codex-panel">
+        <h2>📖 Luonnon Bestiarium</h2>
+        <p>Löydetyt eläimet matkasi varrelta:</p>
+        <div id="codex-grid" class="codex-grid"></div>
+        <button id="codex-close-btn">Palaa alkuun</button>
       </div>
     </div>
   </div>
 
-  <script src="js/audio.js?v=10"></script>
-  <script src="js/input.js?v=10"></script>
-  <script src="js/sprites.js?v=10"></script>
-  <script src="js/skills.js?v=10"></script>
-  <script src="js/entities.js?v=10"></script>
-  <script src="js/game.js?v=10"></script>
+  <script src="js/audio.js?v=12"></script>
+  <script src="js/input.js?v=12"></script>
+  <script src="js/sprites.js?v=12"></script>
+  <script src="js/skills.js?v=12"></script>
+  <script src="js/entities.js?v=12"></script>
+  <script src="js/game.js?v=12"></script>
 </body>
 </html>

@@ -144,6 +144,14 @@ const Audio = (() => {
         blip(900, 'sawtooth', 0.18, 0.26, 480);
         blip(900, 'sawtooth', 0.18, 0.22, 480, 0.22);
         break;
+      case 'eagle': // kotkan huuto
+        blip(750, 'sawtooth', 0.14, 0.20, 1500);
+        blip(1500, 'sawtooth', 0.18, 0.18, 1000, 0.07);
+        break;
+      case 'lynx': // ilveksen sähinä
+        noiseBurst(0.22, 0.25, 1800);
+        blip(260, 'sawtooth', 0.18, 0.15, 140);
+        break;
       case 'boss':
         blip(120, 'sawtooth', 0.7, 0.3, 90);
         noiseBurst(0.5, 0.18, 400);
